@@ -4,7 +4,7 @@ module.exports = function( grunt ) {
         pkg: grunt.file.readJSON("package.json"),
         concat: {
             dist: {
-                src: ["lib/*.js", "models/**/*.js"],
+                src: ["js/**/*.js"],
                 dest: "dist/ttt.js"
             }
         },
@@ -13,7 +13,7 @@ module.exports = function( grunt ) {
             },
             dist: {
                 files: {
-                    "dist/ttt.min.js": ["<%= concat.dist.dest %>"]
+                    "tickytacky.min.js": ["<%= concat.dist.dest %>"]
                 }
             }
         },
@@ -24,7 +24,11 @@ module.exports = function( grunt ) {
             all: ["tests/**/*_tests.js"]
         },
         jshint: {
-            files: ['Gruntfile.js', 'models/**/*.js', 'test/**/*.js'],
+            files: [
+                'Gruntfile.js', 'config.js',
+                'js/models/**/*.js',
+                'tests/**/*_tests.js'
+            ],
             options: {
                 globals: {
                     console: true,

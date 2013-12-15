@@ -13,7 +13,6 @@ eval ( config_content );
 
 var config = require;
 
-config.baseUrl = '.';
 delete config.shim;
 
 require = require_placeholder;
