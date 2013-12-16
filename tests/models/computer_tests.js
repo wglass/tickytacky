@@ -54,34 +54,6 @@ module.exports = {
 
         test.done();
     },
-    'second move: blocks win or takes corner if no center': function( test ) {
-        var computer = new StubbedComputer({"symbol": "o"});
-        var grid = new Grid();
-
-        grid.place_symbol( 1, 1, "x" );
-        grid.set( "last_move", {x: 2, y: 1} );
-        grid.set( "move_count", 3 );
-
-        computer.make_move( grid );
-
-        test.deepEqual( computer.moves_made, ["block_win", "corner"] );
-
-        test.done();
-    },
-    'second move: blocks win or takes side if center': function( test ) {
-        var computer = new StubbedComputer({"symbol": "o"});
-        var grid = new Grid();
-
-        grid.values[1][1] = computer.get("symbol");
-        grid.set( "last_move", {x: 2, y: 0} );
-        grid.set( "move_count", 3 );
-
-        computer.make_move( grid );
-
-        test.deepEqual( computer.moves_made, ["block_win", "side"] );
-
-        test.done();
-    },
     'highest priority move is made': function( test ) {
         var computer = new Computer({"symbol": "o"});
         var grid = new Grid();
@@ -238,6 +210,20 @@ module.exports = {
         ];
 
         test.deepEqual( computer.block_fork( grid ), {x: 2, y: 2} );
+
+        test.done();
+    },
+    'block_fork chooses side if two potential corner forks': function( test ) {
+        var computer = new Computer({"symbol": "o"});
+        var grid = new Grid();
+
+        grid.values = [
+            [null, null, "x"],
+            [null, "o", null],
+            ["x", null, null]
+        ];
+
+        test.deepEqual( computer.block_fork( grid ), {x: 2, y: 1} );
 
         test.done();
     },
