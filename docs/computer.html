@@ -10,67 +10,72 @@
 <body>
   <div id="container">
     <div id="background"></div>
-    
+
       <ul id="jump_to">
         <li>
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
           <div id="jump_page">
-            
-              
+
+
               <a class="source" href="app.html">
                 app.js
               </a>
-            
-              
+
+
               <a class="source" href="computer.html">
                 computer.js
               </a>
-            
-              
+
+
               <a class="source" href="game.html">
                 game.js
               </a>
-            
-              
+
+
               <a class="source" href="grid.html">
-                grid.js
+                grid.js (model)
               </a>
-            
-              
+
+
               <a class="source" href="player.html">
                 player.js
               </a>
-            
-              
+
+
+              <a class="source" href="grid_view.html">
+                grid.js (view)
+              </a>
+
+
               <a class="source" href="status.html">
                 status.js
               </a>
-            
+
           </div>
         </li>
       </ul>
-    
+
     <ul class="sections">
-        
+
           <li id="title">
               <div class="annotation">
                   <h1>computer.js</h1>
               </div>
           </li>
-        
-        
-        
+
+
+
         <li id="section-1">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>define(
     [<span class="string">"underscore"</span>, <span class="string">"models/player"</span>],
     <span class="function"><span class="keyword">function</span><span class="params">( _, Player )</span> {</span>
@@ -83,13 +88,13 @@
                 <span class="keyword">var</span> self = <span class="keyword">this</span>;
 
                 <span class="keyword">var</span> moves_by_priority = [];</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-2">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
@@ -98,7 +103,7 @@ chose the center move, we choose a corner.  If the other
 player chose a side or corner, we take the center.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> ( grid.get(<span class="string">"move_count"</span>) === <span class="number">1</span> ) {
                     <span class="keyword">if</span> ( grid.last_move_was_center() ) {
                         moves_by_priority = [
@@ -110,13 +115,13 @@ player chose a side or corner, we take the center.</p>
                         ];
                     }
                 } <span class="keyword">else</span> {</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-3">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
@@ -125,7 +130,7 @@ as enumerated here:</p>
 <p> <a href="http://en.wikipedia.org/wiki/Tic-tac-toe#Strategy">http://en.wikipedia.org/wiki/Tic-tac-toe#Strategy</a></p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                    moves_by_priority = [
                         <span class="keyword">this</span>.win,
                         <span class="keyword">this</span>.block_win,
@@ -137,13 +142,13 @@ as enumerated here:</p>
                         <span class="keyword">this</span>.empty_side
                     ];
                 }</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-4">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
@@ -151,7 +156,7 @@ as enumerated here:</p>
 available move.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                moves_by_priority.some( <span class="function"><span class="keyword">function</span><span class="params">( potential_move )</span> {</span>
                     <span class="keyword">var</span> move = _.bind(potential_move, self, grid )();
                     <span class="keyword">if</span> ( move ) {
@@ -166,13 +171,13 @@ available move.</p>
                 <span class="keyword">var</span> winning_move = <span class="literal">null</span>;
 
                 <span class="keyword">var</span> path_coordinates = grid.path_coordinates();</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-5">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
@@ -181,7 +186,7 @@ each of the eight possible paths in a grid and check if there&#39;s
 two of the symbol and one blank cell.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                grid.paths().forEach( <span class="function"><span class="keyword">function</span><span class="params">( path, index )</span> {</span>
                     <span class="keyword">if</span> ( _.isEqual( path, [symbol, symbol, <span class="literal">null</span>] ) ) {
                         winning_move = path_coordinates[index][<span class="number">2</span>];
@@ -195,13 +200,13 @@ two of the symbol and one blank cell.</p>
                 <span class="keyword">return</span> winning_move;
             },
             fork_for: <span class="function"><span class="keyword">function</span><span class="params">( grid, symbol )</span> {</span></pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-6">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
@@ -209,15 +214,15 @@ two of the symbol and one blank cell.</p>
 that creates two possible winning <em>next</em> moves.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> path_coordinates = grid.path_coordinates();</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-7">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
@@ -225,7 +230,7 @@ that creates two possible winning <em>next</em> moves.</p>
 object so we can keep coordinates unique.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> potential_moves = {};
 
                 <span class="keyword">var</span> add_potential_move = <span class="function"><span class="keyword">function</span><span class="params">( move )</span> {</span>
@@ -238,13 +243,13 @@ object so we can keep coordinates unique.</p>
 
                     potential_moves[move.x][move.y] += <span class="number">1</span>;
                 };</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-8">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
@@ -252,7 +257,7 @@ object so we can keep coordinates unique.</p>
 add any move that would create a win move on the next go-around</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                grid.paths().forEach( <span class="function"><span class="keyword">function</span><span class="params">( path, index )</span> {</span>
                     <span class="keyword">if</span> ( _.isEqual( path, [symbol, <span class="literal">null</span>, <span class="literal">null</span>] ) ) {
                         add_potential_move( path_coordinates[index][<span class="number">1</span>] );
@@ -269,13 +274,13 @@ add any move that would create a win move on the next go-around</p>
                 <span class="keyword">var</span> move = <span class="literal">null</span>;
                 <span class="keyword">var</span> corner_moves = <span class="number">0</span>;
                 <span class="keyword">var</span> side_moves = <span class="number">0</span>;</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-9">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
@@ -283,7 +288,7 @@ add any move that would create a win move on the next go-around</p>
 showed up <em>twice</em>, i.e. they provide two win moves.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                <span class="keyword">for</span> ( <span class="keyword">var</span> x <span class="keyword">in</span> potential_moves ) {
                     <span class="keyword">if</span> ( ! potential_moves.hasOwnProperty(x) ) {
                         <span class="keyword">continue</span>;
@@ -303,13 +308,13 @@ showed up <em>twice</em>, i.e. they provide two win moves.</p>
                         }
                     }
                 }</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-10">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
@@ -320,7 +325,7 @@ defensive rather than blocking a fork in a corner
 and opening up the other corner&#39;s fork.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> ( side_moves === <span class="number">0</span> &amp;&amp; corner_moves === <span class="number">2</span> ) {
                     move = <span class="keyword">this</span>.empty_side( grid );
                 }
@@ -375,13 +380,13 @@ and opening up the other corner&#39;s fork.</p>
                 <span class="keyword">var</span> self = <span class="keyword">this</span>;
 
                 <span class="keyword">var</span> move = <span class="literal">null</span>;</pre></div></div>
-            
+
         </li>
-        
-        
+
+
         <li id="section-11">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
@@ -391,7 +396,7 @@ that is adjacent to an opponent&#39;s corner if possible.  This way
 we make the desired move but also possibly block potential forks.</p>
 
             </div>
-            
+
             <div class="content"><div class='highlight'><pre>                grid.sides().forEach( <span class="function"><span class="keyword">function</span><span class="params">( side )</span> {</span>
                     <span class="keyword">if</span> ( ! grid.values[side.y][side.x] ) {
                         <span class="keyword">if</span> (
@@ -423,9 +428,9 @@ we make the desired move but also possibly block potential forks.</p>
         <span class="keyword">return</span> Computer;
     }
 );</pre></div></div>
-            
+
         </li>
-        
+
     </ul>
   </div>
 </body>
