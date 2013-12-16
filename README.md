@@ -3,7 +3,13 @@ tickytacky
 
 A simple web-based tic-tac-toe game!
 
-Play it here: http://wglass.github.io/tickytacky/
+Play it here:
+
+http://wglass.github.io/tickytacky/
+
+Read the annotated docs here:
+
+http://wglass.github.io/tickytacky/docs/app.html
 
 Made with all the latest-and-greatest javascript stuff.
 
