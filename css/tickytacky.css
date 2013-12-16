@@ -26,6 +26,10 @@ table td {
     text-align: center;
     vertical-align: center;
 }
+table td:hover {
+    cursor: pointer;
+    background-color: #fcfcfc;
+}
 table tr td.o {
     color: #ff9c9f;
 }
