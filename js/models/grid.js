@@ -18,13 +18,13 @@ define(
                     return;
                 }
                 if ( this.values[y][x] !== null ) {
-                    throw "Not a blank spot.";
+                    return;
                 }
 
                 this.values[y][x] = symbol;
 
                 this.analyze_values();
-                this.trigger( "move_made" );
+                this.trigger( "move_made", x, y, symbol );
             },
             analyze_values: function() {
                 var winning_path = null;

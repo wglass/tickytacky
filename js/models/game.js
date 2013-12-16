@@ -1,13 +1,13 @@
 define(
-    ["backbone", "models/human", "models/computer", "models/grid"],
-    function( Backbone, Human, Computer, Grid ) {
+    ["backbone", "models/player", "models/computer", "models/grid"],
+    function( Backbone, Player, Computer, Grid ) {
         var Game = Backbone.Model.extend({
             defaults: {
                 "state": null
             },
             initialize: function() {
-                this.player_x = new Human({"symbol": "x"});
-                this.player_o = new Computer({"symbol": "o"});
+                this.human = new Player({"symbol": "x"});
+                this.computer = new Computer({"symbol": "o"});
                 this.grid = new Grid();
 
                 this.listenTo( this.grid, "move_made", this.next_move );
@@ -17,7 +17,9 @@ define(
                 this.grid.set("current_player", "x");
                 this.set("state", "started");
 
-                this.player_x.trigger( "your_move", this.grid );
+                this.human.trigger( "your_move", this.grid );
+
+                this.trigger( "start" );
             },
             finish: function() {
                 var winner = this.grid.get("winner");
@@ -29,17 +31,32 @@ define(
                     this.set( "state", "tie" );
                 }
             },
+            restart: function() {
+                this.grid.values = [
+                    [null, null, null],
+                    [null, null, null],
+                    [null, null, null]
+                ];
+                this.grid.set( "winner", null );
+                this.start();
+            },
             next_move: function() {
                 if ( this.get("state") !== "started" ) {
                     return;
                 }
 
-                if ( this.grid.get("current_player") === "x" ) {
-                    this.grid.set( "current_player", "o" );
-                    this.player_o.trigger( "your_move", this.grid );
+                if (
+                    this.grid.get("current_player") === this.human.get("symbol")
+                ) {
+                    this.grid.set(
+                        "current_player", this.computer.get("symbol")
+                    );
+                    this.computer.trigger( "your_move", this.grid );
                 } else {
-                    this.grid.set( "current_player", "x" );
-                    this.player_x.trigger( "your_move", this.grid );
+                    this.grid.set(
+                        "current_player", this.human.get("symbol")
+                    );
+                    this.human.trigger( "your_move", this.grid );
                 }
             }
         });

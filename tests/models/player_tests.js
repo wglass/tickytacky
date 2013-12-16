@@ -10,26 +10,14 @@ module.exports = {
 
         test.done();
     },
-    'your_move event calls make_move()': function( test ) {
-        var make_move_called = false;
-        var StubbedPlayer = Player.extend({
-            make_move: function() { make_move_called = true; }
-        });
+    'opponent returns the opposite symol': function( test ) {
+        var player = new Player({'symbol': 'o'});
 
-        var player = new StubbedPlayer();
+        test.equal( player.opponent(), "x" );
 
-        test.equal( make_move_called, false );
+        player.set( "symbol", "x" );
 
-        player.trigger( "your_move" );
-
-        test.equal( make_move_called, true );
-
-        test.done();
-    },
-    'make_move throws error': function( test ) {
-        var player = new Player();
-
-        test.throws( player.make_move );
+        test.equal( player.opponent(), "o" );
 
         test.done();
     }

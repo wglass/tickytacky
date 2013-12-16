@@ -4,7 +4,13 @@ module.exports = function( grunt ) {
         pkg: grunt.file.readJSON("package.json"),
         concat: {
             dist: {
-                src: ["js/**/*.js"],
+                src: [
+                    "js/lib/require-2.1.9.min.js",
+                    "js/lib/underscore-1.5.2.min.js",
+                    "js/lib/backbone-1.1.0.min.js",
+                    "js/models/*.js",
+                    "js/app.js"
+                ],
                 dest: "dist/ttt.js"
             }
         },
@@ -27,6 +33,7 @@ module.exports = function( grunt ) {
             files: [
                 'Gruntfile.js', 'config.js',
                 'js/models/**/*.js',
+                'js/views/**/*.js',
                 'tests/**/*_tests.js'
             ],
             options: {
@@ -35,17 +42,12 @@ module.exports = function( grunt ) {
                     module: true
                 }
             }
-        },
-        watch: {
-            files: ['<%= jshint.files %>'],
-            tasks: ['jshint', 'nodeunit']
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
-    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
 
     grunt.registerTask('test', ['jshint', 'nodeunit']);

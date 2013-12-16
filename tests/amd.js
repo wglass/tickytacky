@@ -13,6 +13,7 @@ eval ( config_content );
 
 var config = require;
 
+delete config.paths;
 delete config.shim;
 
 require = require_placeholder;

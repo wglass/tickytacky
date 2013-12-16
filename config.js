@@ -1,14 +1,16 @@
 var require = {
     baseUrl: "js/",
     paths: {
-        "underscore": "lib/underscore-1.4.4.min",
-        "backbone": "lib/backbone-1.0.0.min"
+        "underscore": "lib/underscore.min",
+        "backbone": "lib/backbone.min",
+        "zepto": "lib/zepto.min"
     },
     shim: {
         "underscore": {exports: "_"},
+        "zepto": {exports: "$"},
         "backbone": {
             exports: "Backbone",
-            deps: ["underscore"]
+            deps: ["underscore", "zepto"]
         }
     }
 };

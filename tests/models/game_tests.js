@@ -10,8 +10,8 @@ module.exports = {
     'initialize sets two player attributes': function( test ) {
        var game = new Game();
 
-        test.ok( game.player_x );
-        test.ok( game.player_o );
+        test.ok( game.human );
+        test.ok( game.computer );
 
         test.done();
     },
@@ -53,8 +53,8 @@ module.exports = {
     },
     'next_move does nothing if not started': function( test ) {
         var game = new Game();
-        game.player_x = new PlayerStub();
-        game.player_o = new PlayerStub();
+        game.human = new PlayerStub();
+        game.computer = new PlayerStub();
 
         game.next_move();
 
@@ -64,8 +64,8 @@ module.exports = {
     },
     'next_move switches grid current_player': function( test ) {
         var game = new Game();
-        game.player_x = new PlayerStub();
-        game.player_o = new PlayerStub();
+        game.human = new PlayerStub({symbol: "x"});
+        game.computer = new PlayerStub({symbol: "o"});
 
         game.start();
 
@@ -83,35 +83,35 @@ module.exports = {
     },
     'next_move triggers your_move on the right player': function( test ) {
         var game = new Game();
-        game.player_x = new PlayerStub();
-        game.player_o = new PlayerStub();
+        game.human = new PlayerStub({symbol: "x"});
+        game.computer = new PlayerStub({symbol: "o"});
 
         game.start();
 
-        var player_x_moves = 0, player_o_moves = 0;
+        var human_moves = 0, computer_moves = 0;
 
-        game.player_x.on( "your_move", function() { player_x_moves += 1; } );
-        game.player_o.on( "your_move", function() { player_o_moves += 1; } );
+        game.human.on( "your_move", function() { human_moves += 1; } );
+        game.computer.on( "your_move", function() { computer_moves += 1; } );
 
         game.start();
 
-        test.equal( player_x_moves, 1 );
-        test.equal( player_o_moves, 0 );
+        test.equal( human_moves, 1 );
+        test.equal( computer_moves, 0 );
 
         game.next_move();
 
-        test.equal( player_x_moves, 1 );
-        test.equal( player_o_moves, 1 );
+        test.equal( human_moves, 1 );
+        test.equal( computer_moves, 1 );
 
         game.next_move();
 
-        test.equal( player_x_moves, 2 );
-        test.equal( player_o_moves, 1 );
+        test.equal( human_moves, 2 );
+        test.equal( computer_moves, 1 );
 
         game.next_move();
 
-        test.equal( player_x_moves, 2 );
-        test.equal( player_o_moves, 2 );
+        test.equal( human_moves, 2 );
+        test.equal( computer_moves, 2 );
 
         test.done();
     },

@@ -5,9 +5,6 @@ define(
             defaults: {
                 "symbol": null
             },
-            initialize: function() {
-                this.on( "your_move", this.make_move );
-            },
             opponent: function() {
                 return this.get("symbol") === "x" ? "o" : "x";
             },

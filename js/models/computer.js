@@ -3,6 +3,9 @@ define(
     function( _, Player ) {
 
         var Computer = Player.extend({
+            initialize: function() {
+                this.on( "your_move", this.make_move, this );
+            },
             make_move: function( grid ) {
                 var self = this;
 
@@ -73,6 +76,8 @@ define(
                     }
                 });
 
+                var move = null;
+
                 for ( var x in potential_moves ) {
                     if ( ! potential_moves.hasOwnProperty(x) ) {
                         continue;
@@ -83,12 +88,12 @@ define(
                         }
 
                         if ( potential_moves[x][y] > 1 ) {
-                            return {x: x, y: y};
+                            move = {x: x, y: y};
                         }
                     }
                 }
 
-                return null;
+                return move;
             },
             win: function( grid ) {
                 return this.win_for( grid, this.get("symbol") );

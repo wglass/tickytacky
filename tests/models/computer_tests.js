@@ -175,7 +175,7 @@ module.exports = {
             ["o", null, null]
         ];
 
-        test.deepEqual( computer.fork( grid ), {x: 0, y: 0} );
+        test.deepEqual( computer.fork( grid ), {x: 2, y: 2} );
 
         test.done();
     },
@@ -217,7 +217,7 @@ module.exports = {
             ["o", null, null]
         ];
 
-        test.deepEqual( computer.block_fork( grid ), {x: 0, y: 0} );
+        test.deepEqual( computer.block_fork( grid ), {x: 2, y: 2} );
 
         test.done();
     },
