@@ -2,27 +2,6 @@ module.exports = function( grunt ) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
-        concat: {
-            dist: {
-                src: [
-                    "js/lib/require-2.1.9.min.js",
-                    "js/lib/underscore-1.5.2.min.js",
-                    "js/lib/backbone-1.1.0.min.js",
-                    "js/models/*.js",
-                    "js/app.js"
-                ],
-                dest: "dist/ttt.js"
-            }
-        },
-        uglify: {
-            options: {
-            },
-            dist: {
-                files: {
-                    "tickytacky.min.js": ["<%= concat.dist.dest %>"]
-                }
-            }
-        },
         nodeunit: {
             options: {
                 reporter: "minimal"
@@ -42,16 +21,25 @@ module.exports = function( grunt ) {
                     module: true
                 }
             }
+        },
+        requirejs: {
+            compile: {
+                options: {
+                    baseUrl: "js/",
+                    mainConfigFile: "js/config.js",
+                    name: "app",
+                    out: "tickytacky.min.js"
+                }
+            }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
-    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
 
     grunt.registerTask('test', ['jshint', 'nodeunit']);
 
-    grunt.registerTask('default', ['jshint', 'nodeunit', 'concat', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'nodeunit', 'requirejs']);
 
 };

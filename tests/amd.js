@@ -1,7 +1,7 @@
 var fs = require("fs");
 
 var config_content = fs.readFileSync(
-    __dirname + "/../config.js", "utf8"
+    __dirname + "/../js/config.js", "utf8"
 );
 
 // For the require.js config to work in the browser it has to set a global
