@@ -12,17 +12,17 @@ define(
                 var moves_by_priority = [];
 
                 if ( grid.get("move_count") === 1 ) {
-                    if ( grid.last_move_was_corner() ) {
-                        moves_by_priority = [
-                            this.center
-                        ];
-                    } else if ( grid.last_move_was_center() ) {
+                    if ( grid.last_move_was_center() ) {
                         moves_by_priority = [
                             this.empty_corner
                         ];
+                    } else {
+                        moves_by_priority = [
+                            this.center
+                        ];
                     }
                 } else if ( grid.get("move_count") === 3 ) {
-                    if ( grid.last_move_was_corner() ) {
+                    if ( grid.values[1][1] === self.get("symbol") ) {
                         moves_by_priority = [
                             this.block_win,
                             this.empty_side
@@ -166,11 +166,31 @@ define(
                 return move;
             },
             empty_side: function( grid ) {
+                var self = this;
+
                 var move = null;
 
                 grid.sides().forEach( function( side ) {
                     if ( ! grid.values[side.y][side.x] ) {
-                        move = side;
+                        if (
+                            (side.x === 0 || side.x === 2 ) &&
+                            (
+                                grid.values[0][side.x] === self.opponent() ||
+                                grid.values[2][side.x] === self.opponent()
+                            )
+                        ) {
+                            move = side;
+                        } else if (
+                            side.x === 1 &&
+                            (
+                                grid.values[side.y][0] === self.opponent() ||
+                                grid.values[side.y][2] === self.opponent()
+                            )
+                        ) {
+                            move = side;
+                        } else if ( move === null ) {
+                            move = side;
+                        }
                     }
                 });
 
