@@ -21,18 +21,6 @@ define(
                             this.center
                         ];
                     }
-                } else if ( grid.get("move_count") === 3 ) {
-                    if ( grid.values[1][1] === self.get("symbol") ) {
-                        moves_by_priority = [
-                            this.block_win,
-                            this.empty_side
-                        ];
-                    } else {
-                        moves_by_priority = [
-                            this.block_win,
-                            this.empty_corner
-                        ];
-                    }
                 } else {
                     moves_by_priority = [
                         this.win,
@@ -103,6 +91,8 @@ define(
                 });
 
                 var move = null;
+                var corner_moves = 0;
+                var side_moves = 0;
 
                 for ( var x in potential_moves ) {
                     if ( ! potential_moves.hasOwnProperty(x) ) {
@@ -115,8 +105,25 @@ define(
 
                         if ( potential_moves[x][y] > 1 ) {
                             move = {x: x, y: y};
+                            if ( grid.is_corner_move( move ) ) {
+                                corner_moves += 1;
+                            } else if ( grid.is_side_move( move ) ) {
+                                side_moves += 1;
+                            }
                         }
                     }
+                }
+
+                /* special case, if the board looks like this:
+                 x |   |
+                   | o |
+                   |   | x
+                 Then we should pick a side to force them on the
+                 defensive, rather than blocking a fork in a corner
+                 and opening up the other corner's fork.
+                 */
+                if ( side_moves === 0 && corner_moves === 2 ) {
+                    move = this.empty_side( grid );
                 }
 
                 return move;

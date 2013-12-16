@@ -53,15 +53,19 @@ define(
                 return last_move.x === 1 && last_move.y === 1;
             },
             last_move_was_corner: function() {
-                var last_move = this.get("last_move");
-                return this.corners().some( function( corner ) {
-                    return corner.x == last_move.x && corner.y == last_move.y;
-                });
+                return this.is_corner_move( this.get("last_move") );
             },
             last_move_was_side: function() {
-                var last_move = this.get("last_move");
+                return this.is_side_move( this.get("last_move") );
+            },
+            is_side_move: function( move ) {
                 return this.sides().some( function( side ) {
-                    return side.x == last_move.x && side.y == last_move.y;
+                    return side.x == move.x && side.y == move.y;
+                });
+            },
+            is_corner_move: function( move ) {
+                return this.corners().some( function( corner ) {
+                    return corner.x == move.x && corner.y == move.y;
                 });
             },
             analyze_values: function() {
