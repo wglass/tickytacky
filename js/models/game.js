@@ -38,6 +38,7 @@ define(
                     [null, null, null]
                 ];
                 this.grid.set( "winner", null );
+                this.grid.set( "move_count", 0 );
                 this.start();
             },
             next_move: function() {

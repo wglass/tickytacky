@@ -9,16 +9,20 @@ define(
             make_move: function( grid ) {
                 var self = this;
 
-                var priority_moves = [
-                    this.win,
-                    this.block_win,
-                    this.fork,
-                    this.block_fork,
-                    this.center,
-                    this.opposite_corner,
-                    this.empty_corner,
-                    this.empty_side
-                ];
+                var priority_moves = ( grid.get("move_count") < 4 ) ?
+                        [
+                            this.center,
+                            this.empty_side
+                        ] : [
+                            this.win,
+                            this.block_win,
+                            this.fork,
+                            this.block_fork,
+                            this.center,
+                            this.opposite_corner,
+                            this.empty_corner,
+                            this.empty_side
+                        ];
 
                 priority_moves.some( function( potential_move ) {
                     var move = _.bind(potential_move, self, grid )();

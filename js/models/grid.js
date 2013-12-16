@@ -4,7 +4,8 @@ define(
         var Grid = Backbone.Model.extend({
             defaults: {
                 "winner": null,
-                "current_player": null
+                "current_player": null,
+                "move_count": 0
             },
             initialize: function() {
                 this.values = [
@@ -24,6 +25,9 @@ define(
                 this.values[y][x] = symbol;
 
                 this.analyze_values();
+
+                this.set( "move_count", this.get("move_count") + 1 );
+
                 this.trigger( "move_made", x, y, symbol );
             },
             analyze_values: function() {

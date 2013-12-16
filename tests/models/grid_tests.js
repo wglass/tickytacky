@@ -8,6 +8,7 @@ module.exports = {
 
         test.equal( grid.get("winner"), null );
         test.equal( grid.get("current_player"), null );
+        test.equal( grid.get("move_count"), 0 );
 
         test.done();
     },

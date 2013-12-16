@@ -6,48 +6,54 @@ var Computer = amdrequire("models/computer");
 var Grid = amdrequire("models/grid");
 
 
+var StubbedComputer = Computer.extend({
+    initialize: function() {
+        this.moves_made = [];
+    },
+    win: function() { this.moves_made.push("win"); return null; },
+    block_win: function() { this.moves_made.push("block_win"); return null; },
+    fork: function() { this.moves_made.push("fork"); return null; },
+    block_fork: function() { this.moves_made.push("block_fork"); return null; },
+    center: function() { this.moves_made.push("center"); return null; },
+    opposite_corner: function() {
+        this.moves_made.push("opposite"); return null;
+    },
+    empty_corner: function() {
+        this.moves_made.push("corner"); return null;
+    },
+    empty_side: function() {
+        this.moves_made.push("side"); return null;
+    }
+});
+
+
 module.exports = {
-    'moves are attempted in order of priority': function( test ) {
-        var computer = new Computer({"symbol": "o"});
+    'center and side moves are made in the beginning': function( test ) {
+        var computer = new StubbedComputer({"symbol": "o"});
+        var grid = new Grid();
 
-        var moves_made = [];
-        computer.block_fork = function() {
-            moves_made.push( "block_fork" );
-            return null;
-        };
-        computer.block_win = function() {
-            moves_made.push( "block_win" );
-            return null;
-        };
-        computer.center = function() {
-            moves_made.push( "center" );
-            return null;
-        };
-        computer.empty_corner = function() {
-            moves_made.push( "corner" );
-            return null;
-        };
-        computer.empty_side = function() {
-            moves_made.push( "side" );
-            return null;
-        };
-        computer.fork = function() {
-            moves_made.push( "fork" );
-            return null;
-        };
-        computer.opposite_corner = function() {
-            moves_made.push( "opposite" );
-            return null;
-        };
-        computer.win = function() {
-            moves_made.push( "win" );
-            return null;
-        };
-
-        computer.make_move( new Grid() );
+        computer.make_move( grid );
 
         test.deepEqual(
-            moves_made,
+            computer.moves_made,
+            [
+                'center',
+                'side'
+            ]
+        );
+
+        test.done();
+    },
+    'moves are attempted in priority order after 4': function( test ) {
+        var computer = new StubbedComputer({"symbol": "o"});
+        var grid = new Grid();
+
+        grid.set( "move_count", 5 );
+
+        computer.make_move( grid );
+
+        test.deepEqual(
+            computer.moves_made,
             [
                 'win',
                 'block_win',

@@ -143,5 +143,41 @@ module.exports = {
         test.equal( next_move_called, true );
 
         test.done();
+    },
+    'restart resets grid values and calls start()': function( test ) {
+        var game = new Game();
+
+        game.start();
+
+        game.grid.place_symbol( 1, 1, "x" );
+        game.grid.place_symbol( 2, 1, "x" );
+
+        game.grid.set( "winner", "tie" );
+
+        test.ok( game.grid.get("move_count") > 0 );
+        test.equal( game.get("state"), "tie" );
+        test.notDeepEqual(
+            game.grid.values,
+            [
+                [null, null, null],
+                [null, null, null],
+                [null, null, null]
+            ]
+        );
+
+        game.restart();
+
+        test.equal( game.get("state"), "started" );
+        test.equal( game.grid.get("move_count"), 0 );
+        test.deepEqual(
+            game.grid.values,
+            [
+                [null, null, null],
+                [null, null, null],
+                [null, null, null]
+            ]
+        );
+
+        test.done();
     }
 };
