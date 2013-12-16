@@ -5,7 +5,8 @@ define(
             defaults: {
                 "winner": null,
                 "current_player": null,
-                "move_count": 0
+                "move_count": 0,
+                "last_move": null
             },
             initialize: function() {
                 this.values = [
@@ -27,8 +28,41 @@ define(
                 this.analyze_values();
 
                 this.set( "move_count", this.get("move_count") + 1 );
+                this.set( "last_move", {x: x, y: y} );
 
                 this.trigger( "move_made", x, y, symbol );
+            },
+            corners: function() {
+                return [
+                    {x: 0, y: 0},
+                    {x: 0, y: 2},
+                    {x: 2, y: 0},
+                    {x: 2, y: 2}
+                ];
+            },
+            sides: function() {
+                return [
+                    {x: 0, y: 1},
+                    {x: 1, y: 0},
+                    {x: 1, y: 2},
+                    {x: 2, y: 1}
+                ];
+            },
+            last_move_was_center: function() {
+                var last_move = this.get("last_move");
+                return last_move.x === 1 && last_move.y === 1;
+            },
+            last_move_was_corner: function() {
+                var last_move = this.get("last_move");
+                return this.corners().some( function( corner ) {
+                    return corner.x == last_move.x && corner.y == last_move.y;
+                });
+            },
+            last_move_was_side: function() {
+                var last_move = this.get("last_move");
+                return this.sides().some( function( side ) {
+                    return side.x == last_move.x && side.y == last_move.y;
+                });
             },
             analyze_values: function() {
                 var winning_path = null;

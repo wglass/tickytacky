@@ -28,43 +28,55 @@ var StubbedComputer = Computer.extend({
 
 
 module.exports = {
-    'center and side moves are made in the beginning': function( test ) {
+    'first move: center taken if not already': function( test ) {
         var computer = new StubbedComputer({"symbol": "o"});
         var grid = new Grid();
 
+        grid.set( "last_move", {x: 0, y: 2} );
+        grid.set( "move_count", 1 );
+
         computer.make_move( grid );
 
-        test.deepEqual(
-            computer.moves_made,
-            [
-                'center',
-                'side'
-            ]
-        );
+        test.deepEqual( computer.moves_made, ["center"] );
 
         test.done();
     },
-    'moves are attempted in priority order after 4': function( test ) {
+    'first move: corner taken if center taken': function( test ) {
         var computer = new StubbedComputer({"symbol": "o"});
         var grid = new Grid();
 
-        grid.set( "move_count", 5 );
+        grid.set( "last_move", {x: 1, y: 1} );
+        grid.set( "move_count", 1 );
 
         computer.make_move( grid );
 
-        test.deepEqual(
-            computer.moves_made,
-            [
-                'win',
-                'block_win',
-                'fork',
-                'block_fork',
-                'center',
-                'opposite',
-                'corner',
-                'side'
-            ]
-        );
+        test.deepEqual( computer.moves_made, ["corner"] );
+
+        test.done();
+    },
+    'second move: blocks win or takes corner after side': function( test ) {
+        var computer = new StubbedComputer({"symbol": "o"});
+        var grid = new Grid();
+
+        grid.set( "last_move", {x: 2, y: 1} );
+        grid.set( "move_count", 3 );
+
+        computer.make_move( grid );
+
+        test.deepEqual( computer.moves_made, ["block_win", "corner"] );
+
+        test.done();
+    },
+    'second move: blocks win or takes side after corner': function( test ) {
+        var computer = new StubbedComputer({"symbol": "o"});
+        var grid = new Grid();
+
+        grid.set( "last_move", {x: 2, y: 0} );
+        grid.set( "move_count", 3 );
+
+        computer.make_move( grid );
+
+        test.deepEqual( computer.moves_made, ["block_win", "side"] );
 
         test.done();
     },

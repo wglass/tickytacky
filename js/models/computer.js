@@ -9,22 +9,44 @@ define(
             make_move: function( grid ) {
                 var self = this;
 
-                var priority_moves = ( grid.get("move_count") < 4 ) ?
-                        [
-                            this.center,
-                            this.empty_side
-                        ] : [
-                            this.win,
+                var moves_by_priority = [];
+
+                if ( grid.get("move_count") === 1 ) {
+                    if ( grid.last_move_was_corner() ) {
+                        moves_by_priority = [
+                            this.center
+                        ];
+                    } else if ( grid.last_move_was_center() ) {
+                        moves_by_priority = [
+                            this.empty_corner
+                        ];
+                    }
+                } else if ( grid.get("move_count") === 3 ) {
+                    if ( grid.last_move_was_corner() ) {
+                        moves_by_priority = [
                             this.block_win,
-                            this.fork,
-                            this.block_fork,
-                            this.center,
-                            this.opposite_corner,
-                            this.empty_corner,
                             this.empty_side
                         ];
+                    } else {
+                        moves_by_priority = [
+                            this.block_win,
+                            this.empty_corner
+                        ];
+                    }
+                } else {
+                    moves_by_priority = [
+                        this.win,
+                        this.block_win,
+                        this.fork,
+                        this.block_fork,
+                        this.center,
+                        this.opposite_corner,
+                        this.empty_corner,
+                        this.empty_side
+                    ];
+                }
 
-                priority_moves.some( function( potential_move ) {
+                moves_by_priority.some( function( potential_move ) {
                     var move = _.bind(potential_move, self, grid )();
                     if ( move ) {
                         grid.place_symbol( move.x, move.y, self.get("symbol") );
@@ -118,12 +140,7 @@ define(
                 var move = null;
                 var opponent = this.get("symbol") === "x" ? "o" : "x";
 
-                [
-                    {x: 0, y: 0},
-                    {x: 0, y: 2},
-                    {x: 2, y: 0},
-                    {x: 2, y: 2}
-                ].forEach( function( corner ) {
+                grid.corners().forEach( function( corner ) {
                     if ( grid.values[corner.y][corner.x] === opponent ) {
                         var opposite = {
                             x: corner.x === 0 ? 2 : 0,
@@ -140,12 +157,7 @@ define(
             empty_corner: function( grid ) {
                 var move = null;
 
-                [
-                    {x: 0, y: 0},
-                    {x: 0, y: 2},
-                    {x: 2, y: 0},
-                    {x: 2, y: 2}
-                ].forEach( function( corner ) {
+                grid.corners().forEach( function( corner ) {
                     if ( ! grid.values[corner.y][corner.x] ) {
                         move = corner;
                     }
@@ -156,12 +168,7 @@ define(
             empty_side: function( grid ) {
                 var move = null;
 
-                [
-                    {x: 0, y: 1},
-                    {x: 1, y: 0},
-                    {x: 1, y: 2},
-                    {x: 2, y: 1}
-                ].forEach( function( side ) {
+                grid.sides().forEach( function( side ) {
                     if ( ! grid.values[side.y][side.x] ) {
                         move = side;
                     }
