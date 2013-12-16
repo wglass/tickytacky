@@ -12,17 +12,17 @@ define(
                 var moves_by_priority = [];
 
                 if ( grid.get("move_count") === 1 ) {
-                    if ( grid.last_move_was_corner() ) {
-                        moves_by_priority = [
-                            this.center
-                        ];
-                    } else if ( grid.last_move_was_center() ) {
+                    if ( grid.last_move_was_center() ) {
                         moves_by_priority = [
                             this.empty_corner
                         ];
+                    } else {
+                        moves_by_priority = [
+                            this.center
+                        ];
                     }
                 } else if ( grid.get("move_count") === 3 ) {
-                    if ( grid.last_move_was_corner() ) {
+                    if ( grid.values[1][1] === self.get("symbol") ) {
                         moves_by_priority = [
                             this.block_win,
                             this.empty_side
@@ -188,9 +188,9 @@ define(
                             )
                         ) {
                             move = side;
+                        } else if ( move === null ) {
+                            move = side;
                         }
-                    } else if ( move === null ) {
-                        move = side;
                     }
                 });
 

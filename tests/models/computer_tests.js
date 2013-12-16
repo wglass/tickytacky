@@ -54,10 +54,11 @@ module.exports = {
 
         test.done();
     },
-    'second move: blocks win or takes corner after side': function( test ) {
+    'second move: blocks win or takes corner if no center': function( test ) {
         var computer = new StubbedComputer({"symbol": "o"});
         var grid = new Grid();
 
+        grid.place_symbol( 1, 1, "x" );
         grid.set( "last_move", {x: 2, y: 1} );
         grid.set( "move_count", 3 );
 
@@ -67,10 +68,11 @@ module.exports = {
 
         test.done();
     },
-    'second move: blocks win or takes side after corner': function( test ) {
+    'second move: blocks win or takes side if center': function( test ) {
         var computer = new StubbedComputer({"symbol": "o"});
         var grid = new Grid();
 
+        grid.values[1][1] = computer.get("symbol");
         grid.set( "last_move", {x: 2, y: 0} );
         grid.set( "move_count", 3 );
 
