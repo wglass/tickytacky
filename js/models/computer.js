@@ -166,10 +166,30 @@ define(
                 return move;
             },
             empty_side: function( grid ) {
+                var self = this;
+
                 var move = null;
 
                 grid.sides().forEach( function( side ) {
                     if ( ! grid.values[side.y][side.x] ) {
+                        if (
+                            (side.x === 0 || side.x === 2 ) &&
+                            (
+                                grid.values[0][side.x] === self.opponent() ||
+                                grid.values[2][side.x] === self.opponent()
+                            )
+                        ) {
+                            move = side;
+                        } else if (
+                            side.x === 1 &&
+                            (
+                                grid.values[side.y][0] === self.opponent() ||
+                                grid.values[side.y][2] === self.opponent()
+                            )
+                        ) {
+                            move = side;
+                        }
+                    } else if ( move === null ) {
                         move = side;
                     }
                 });
