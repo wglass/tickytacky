@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>grid.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="computer.html">
+                computer.js
+              </a>
+            
+              
+              <a class="source" href="game.html">
+                game.js
+              </a>
+            
+              
+              <a class="source" href="grid.html">
+                grid.js
+              </a>
+            
+              
+              <a class="source" href="player.html">
+                player.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>grid.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define(
+    [<span class="string">"backbone"</span>],
+    <span class="function"><span class="keyword">function</span><span class="params">( Backbone )</span> {</span>
+        <span class="keyword">var</span> Grid = Backbone.Model.extend({
+            defaults: {
+                <span class="string">"winner"</span>: <span class="literal">null</span>,
+                <span class="string">"current_player"</span>: <span class="literal">null</span>,
+                <span class="string">"move_count"</span>: <span class="number">0</span>,
+                <span class="string">"last_move"</span>: <span class="literal">null</span>
+            },
+            initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">this</span>.values = [
+                    [<span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>],
+                    [<span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>],
+                    [<span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>]
+                ];
+            },
+            place_symbol: <span class="function"><span class="keyword">function</span><span class="params">( x, y, symbol )</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Don&#39;t place a symbol if it doesn&#39;t belong to the current
+player.  This shouldn&#39;t come up with proper coordination
+by the Game model but it&#39;s good to be on the safe side.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> ( symbol !== <span class="keyword">this</span>.get(<span class="string">"current_player"</span>) ) {
+                    <span class="keyword">return</span>;
+                }
+                <span class="keyword">if</span> ( <span class="keyword">this</span>.values[y][x] !== <span class="literal">null</span> ) {
+                    <span class="keyword">return</span>;
+                }
+
+                <span class="keyword">this</span>.values[y][x] = symbol;
+
+                <span class="keyword">this</span>.analyze_values();
+
+                <span class="keyword">this</span>.set( <span class="string">"move_count"</span>, <span class="keyword">this</span>.get(<span class="string">"move_count"</span>) + <span class="number">1</span> );
+                <span class="keyword">this</span>.set( <span class="string">"last_move"</span>, {x: x, y: y} );
+
+                <span class="keyword">this</span>.trigger( <span class="string">"move_made"</span>, x, y, symbol );
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>It&#39;s often needed to know if a certain move is a corner or
+a side, or if the last move made was either.  So we have
+a handful of helper methods for such occasions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            corners: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">return</span> [
+                    {x: <span class="number">0</span>, y: <span class="number">0</span>},
+                    {x: <span class="number">0</span>, y: <span class="number">2</span>},
+                    {x: <span class="number">2</span>, y: <span class="number">0</span>},
+                    {x: <span class="number">2</span>, y: <span class="number">2</span>}
+                ];
+            },
+            sides: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">return</span> [
+                    {x: <span class="number">0</span>, y: <span class="number">1</span>},
+                    {x: <span class="number">1</span>, y: <span class="number">0</span>},
+                    {x: <span class="number">1</span>, y: <span class="number">2</span>},
+                    {x: <span class="number">2</span>, y: <span class="number">1</span>}
+                ];
+            },
+            last_move_was_center: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">var</span> last_move = <span class="keyword">this</span>.get(<span class="string">"last_move"</span>);
+                <span class="keyword">return</span> last_move.x === <span class="number">1</span> &amp;&amp; last_move.y === <span class="number">1</span>;
+            },
+            last_move_was_corner: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">return</span> <span class="keyword">this</span>.is_corner_move( <span class="keyword">this</span>.get(<span class="string">"last_move"</span>) );
+            },
+            last_move_was_side: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">return</span> <span class="keyword">this</span>.is_side_move( <span class="keyword">this</span>.get(<span class="string">"last_move"</span>) );
+            },
+            is_side_move: <span class="function"><span class="keyword">function</span><span class="params">( move )</span> {</span>
+                <span class="keyword">return</span> <span class="keyword">this</span>.sides().some( <span class="function"><span class="keyword">function</span><span class="params">( side )</span> {</span>
+                    <span class="keyword">return</span> side.x == move.x &amp;&amp; side.y == move.y;
+                });
+            },
+            is_corner_move: <span class="function"><span class="keyword">function</span><span class="params">( move )</span> {</span>
+                <span class="keyword">return</span> <span class="keyword">this</span>.corners().some( <span class="function"><span class="keyword">function</span><span class="params">( corner )</span> {</span>
+                    <span class="keyword">return</span> corner.x == move.x &amp;&amp; corner.y == move.y;
+                });
+            },
+            analyze_values: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">var</span> winning_path = <span class="literal">null</span>;
+                <span class="keyword">var</span> paths_in_play = <span class="number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>To determine if there&#39;s a winner or a tie, we merely
+iterate over the eight possible paths in the grid and
+any path that contains three of the same symbol means
+that symbol is the winner.  If a path contains <em>both</em>
+symbols it&#39;s out of play.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">this</span>.paths().forEach( <span class="function"><span class="keyword">function</span><span class="params">( path )</span> {</span>
+                    <span class="keyword">if</span> (
+                        path[<span class="number">0</span>] &amp;&amp;
+                        path[<span class="number">0</span>] === path[<span class="number">1</span>] &amp;&amp;
+                        path[<span class="number">1</span>] === path[<span class="number">2</span>]
+                    ) {
+                        winning_path = path;
+                    }
+                    <span class="keyword">if</span> (
+                        path.indexOf(<span class="string">"x"</span>) === -<span class="number">1</span> ||
+                        path.indexOf(<span class="string">"o"</span>) === -<span class="number">1</span>
+                    ) {
+                        paths_in_play += <span class="number">1</span>;
+                    }
+                });
+
+                <span class="keyword">if</span> ( winning_path ) {
+                    <span class="keyword">this</span>.set( <span class="string">"winner"</span>, winning_path[<span class="number">0</span>] );
+                    <span class="keyword">return</span>;
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>If all paths are out of play, it&#39;s a tie game.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> ( paths_in_play === <span class="number">0</span> ) {
+                    <span class="keyword">this</span>.set( <span class="string">"winner"</span>, <span class="string">"tie"</span> );
+                }
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>This paths() function merely iterates over the path_coordinates()
+result and maps them to the current grid&#39;s values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            paths: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">var</span> self = <span class="keyword">this</span>;
+                <span class="keyword">return</span> <span class="keyword">this</span>.path_coordinates().map(<span class="function"><span class="keyword">function</span><span class="params">( coordinates )</span> {</span>
+                    <span class="keyword">return</span> coordinates.map(<span class="function"><span class="keyword">function</span> <span class="params">( coordinate )</span> {</span>
+                        <span class="keyword">return</span> self.values[coordinate.y][coordinate.x];
+                    });
+                });
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>path_coordinates() is a helpful enumeration of the eight
+possible paths as arrays of coordinate objects.  Iterating
+over paths with paths(), the current index of the iteration
+can be passed to this path_coordinates() result to find the
+actual coordinates of possible moves.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            path_coordinates: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">return</span> [
+                    <span class="comment">/* rows */</span>
+                    [{x: <span class="number">0</span>, y: <span class="number">0</span>}, {x: <span class="number">1</span>, y: <span class="number">0</span>}, {x: <span class="number">2</span>, y: <span class="number">0</span>}],
+                    [{x: <span class="number">0</span>, y: <span class="number">1</span>}, {x: <span class="number">1</span>, y: <span class="number">1</span>}, {x: <span class="number">2</span>, y: <span class="number">1</span>}],
+                    [{x: <span class="number">0</span>, y: <span class="number">2</span>}, {x: <span class="number">1</span>, y: <span class="number">2</span>}, {x: <span class="number">2</span>, y: <span class="number">2</span>}],
+                    <span class="comment">/* columns */</span>
+                    [{x: <span class="number">0</span>, y: <span class="number">0</span>}, {x: <span class="number">0</span>, y: <span class="number">1</span>}, {x: <span class="number">0</span>, y: <span class="number">2</span>}],
+                    [{x: <span class="number">1</span>, y: <span class="number">0</span>}, {x: <span class="number">1</span>, y: <span class="number">1</span>}, {x: <span class="number">1</span>, y: <span class="number">2</span>}],
+                    [{x: <span class="number">2</span>, y: <span class="number">0</span>}, {x: <span class="number">2</span>, y: <span class="number">1</span>}, {x: <span class="number">2</span>, y: <span class="number">2</span>}],
+                    <span class="comment">/* diagonals */</span>
+                    [{x: <span class="number">0</span>, y: <span class="number">0</span>}, {x: <span class="number">1</span>, y: <span class="number">1</span>}, {x: <span class="number">2</span>, y: <span class="number">2</span>}],
+                    [{x: <span class="number">0</span>, y: <span class="number">2</span>}, {x: <span class="number">1</span>, y: <span class="number">1</span>}, {x: <span class="number">2</span>, y: <span class="number">0</span>}]
+                ];
+            }
+        });
+
+        <span class="keyword">return</span> Grid;
+    }
+);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
