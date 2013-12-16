@@ -1,6 +1,9 @@
 require(
     ["models/game", "views/grid", "views/status"],
     function( Game, GridView, StatusView ) {
+        // This module is the main entrypoint.  All it does is
+        // instantiate a new game, create the two views and makes
+        // sure the views are re-drawn on the proper events.
         var game = new Game();
 
         var grid_view = new GridView( {model: game} );

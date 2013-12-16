@@ -16,6 +16,9 @@ define(
                 ];
             },
             place_symbol: function( x, y, symbol ) {
+                // Don't place a symbol if it doesn't belong to the current
+                // player.  This shouldn't come up with proper coordination
+                // by the Game model but it's good to be on the safe side.
                 if ( symbol !== this.get("current_player") ) {
                     return;
                 }
@@ -32,6 +35,9 @@ define(
 
                 this.trigger( "move_made", x, y, symbol );
             },
+            // It's often needed to know if a certain move is a corner or
+            // a side, or if the last move made was either.  So we have
+            // a handful of helper methods for such occasions.
             corners: function() {
                 return [
                     {x: 0, y: 0},
@@ -72,6 +78,11 @@ define(
                 var winning_path = null;
                 var paths_in_play = 0;
 
+                // To determine if there's a winner or a tie, we merely
+                // iterate over the eight possible paths in the grid and
+                // any path that contains three of the same symbol means
+                // that symbol is the winner.  If a path contains *both*
+                // symbols it's out of play.
                 this.paths().forEach( function( path ) {
                     if (
                         path[0] &&
@@ -93,10 +104,13 @@ define(
                     return;
                 }
 
+                // If all paths are out of play, it's a tie game.
                 if ( paths_in_play === 0 ) {
                     this.set( "winner", "tie" );
                 }
             },
+            // This paths() function merely iterates over the path_coordinates()
+            // result and maps them to the current grid's values.
             paths: function() {
                 var self = this;
                 return this.path_coordinates().map(function( coordinates ) {
@@ -105,6 +119,11 @@ define(
                     });
                 });
             },
+            // path_coordinates() is a helpful enumeration of the eight
+            // possible paths as arrays of coordinate objects.  Iterating
+            // over paths with paths(), the current index of the iteration
+            // can be passed to this path_coordinates() result to find the
+            // actual coordinates of possible moves.
             path_coordinates: function() {
                 return [
                     /* rows */
