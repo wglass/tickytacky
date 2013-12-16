@@ -1,6 +1,9 @@
 define(
     ["backbone"],
     function( Backbone ) {
+        // This is a simple view that shows a message whenever the
+        // game ends.  Once a message is displayed and the user clicks
+        // on it the game is restarted.
         var StatusView = Backbone.View.extend({
             el: "#status",
             events: {
